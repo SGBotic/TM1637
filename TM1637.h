@@ -29,6 +29,13 @@
  * THE SOFTWARE.
  */
 
+/*
+ * 09Dec2015: modify to allow individual control of decimal point.
+ *
+*/
+
+
+
 #ifndef TM1637_h
 #define TM1637_h
 #include <inttypes.h>
@@ -55,17 +62,18 @@ class TM1637
     boolean _PointFlag;     //_PointFlag=1:the clock point on
     TM1637(uint8_t, uint8_t);
     void init(void);        //To clear the display
-    int  writeByte(int8_t wr_data);//write 8bit data to tm1637
+    void writeByte(int8_t wr_data);//write 8bit data to tm1637
     void start(void);//send start bits
     void stop(void); //send stop bits
     void display(int8_t DispData[]);
     void display(uint8_t BitAddr,int8_t DispData);
+    void display(uint8_t BitAddr,int8_t DispData, uint8_t decPoint);
+
     void clearDisplay(void);
     void set(uint8_t = BRIGHT_TYPICAL,uint8_t = 0x40,uint8_t = 0xc0);//To take effect the next time it displays.
     void point(boolean PointFlag);//whether to light the clock point ":".To take effect the next time it displays.
     void coding(int8_t DispData[]);
     int8_t coding(int8_t DispData);
-    void bitDelay(void);
   private:
     uint8_t Clkpin;
     uint8_t Datapin;

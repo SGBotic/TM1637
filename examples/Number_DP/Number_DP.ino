@@ -43,9 +43,9 @@ void loop()
     if (i == sizeof(NumTab))
       i = 0;
   }
-  tm1637.display(0, posDisp[0], POINT_ON); //display first digit, Decimal Point (DP) on
-  tm1637.display(1, posDisp[1], POINT_OFF); //dispaly 2nd digit, DP off
-  tm1637.display(2, posDisp[2], POINT_OFF); //display 3rd digit, DP off
-  tm1637.display(3, posDisp[3], POINT_OFF); //display 4th digit, DP off
+  tm1637.display(0, 0, POINT_ON); //display first digit, Decimal Point (DP) on
+  tm1637.display(1, 1, POINT_OFF); //dispaly 2nd digit, DP off
+  tm1637.display(2, 2, POINT_OFF); //display 3rd digit, DP off
+  tm1637.display(3, 3, POINT_OFF); //display 4th digit, DP off
   delay(500); //short delay
 }

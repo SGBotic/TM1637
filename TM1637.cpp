@@ -28,6 +28,10 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
+/*
+ * 09Dec2015: modify to allow individual control of decimal point.
+ *
+*/
 
 #include "TM1637.h"
 #include <Arduino.h>
@@ -48,7 +52,7 @@ void TM1637::init(void)
   clearDisplay();
 }
 
-int TM1637::writeByte(int8_t wr_data)
+void TM1637::writeByte(int8_t wr_data)
 {
   uint8_t i,count1;
   for(i=0;i<8;i++)        //sent 8bit data
@@ -64,19 +68,19 @@ int TM1637::writeByte(int8_t wr_data)
   digitalWrite(Datapin,HIGH);
   digitalWrite(Clkpin,HIGH);
   pinMode(Datapin,INPUT);
-
-  bitDelay();
-  uint8_t ack = digitalRead(Datapin);
-  if (ack == 0) 
+  while(digitalRead(Datapin))
   {
+    count1 +=1;
+    if(count1 == 200)//
+    {
      pinMode(Datapin,OUTPUT);
      digitalWrite(Datapin,LOW);
+     count1 =0;
+    }
+    pinMode(Datapin,INPUT);
   }
-  bitDelay();
   pinMode(Datapin,OUTPUT);
-  bitDelay();
-  
-  return ack;
+
 }
 //send start signal to TM1637
 void TM1637::start(void)
@@ -135,6 +139,30 @@ void TM1637::display(uint8_t BitAddr,int8_t DispData)
   stop();           //
 }
 
+
+void TM1637::display(uint8_t BitAddr,int8_t DispData, uint8_t decPoint)
+{
+  int8_t SegData;
+  SegData = coding(DispData);
+  if(decPoint == POINT_ON)
+  {
+    SegData += 0x80;	
+
+  }
+  start();          //start signal sent to TM1637 from MCU
+  writeByte(ADDR_FIXED);//
+  stop();           //
+  start();          //
+  writeByte(BitAddr|0xc0);//
+  writeByte(SegData);//
+  stop();            //
+  start();          //
+  writeByte(Cmd_DispCtrl);//
+  stop();           //
+}
+
+
+
 void TM1637::clearDisplay(void)
 {
   display(0x00,0x7f);
@@ -175,8 +203,4 @@ int8_t TM1637::coding(int8_t DispData)
   if(DispData == 0x7f) DispData = 0x00 + PointData;//The bit digital tube off
   else DispData = TubeTab[DispData] + PointData;
   return DispData;
-}
-void TM1637::bitDelay(void)
-{
-	delayMicroseconds(50);
 }

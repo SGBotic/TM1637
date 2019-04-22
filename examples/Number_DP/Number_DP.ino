@@ -7,8 +7,8 @@
 
 #include "TM1637.h"
 
-#define CLK 2   // CLK pin on the Serial 7-Segment LED Display connects to digital pin 2.
-#define DIO 3   // DIO on the Serial 7-Segment LED Display connects to digital pin 3.
+#define CLK 3   // CLK pin on the Serial 7-Segment LED Display connects to digital pin 2.
+#define DIO 2   // DIO on the Serial 7-Segment LED Display connects to digital pin 3.
 
 //Value to display on 7-Segment LED
 //0~9,A,b,C,d,E,F
